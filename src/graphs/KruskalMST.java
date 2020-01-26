@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
-import javafx.util.Pair;
+import util.DisjointSet;
 
 public class KruskalMST {
 	
@@ -42,43 +42,16 @@ public class KruskalMST {
 			parent[i]=-1;
 		}
 		int minHeapSize=minHeap.size();
+		DisjointSet Uf =new DisjointSet(vertices);
 		for(int i=0;i<minHeapSize;i++){
 			Edge polledEdge=minHeap.poll();
-			boolean isCycle = detectCycle(polledEdge);
-			if(!isCycle){
+			if(Uf.find(polledEdge.getSource()) != Uf.find(polledEdge.getDestination())){
+				Uf.union(polledEdge.getSource(), polledEdge.getDestination());
 				cost+=polledEdge.getWeight();
-			}
-			
+			}	
 		}
-		
 		
 		return cost;
 	}
-
-	private boolean detectCycle(Edge edge) {
-		int x=find(parent,edge.getSource());
-		int y=find(parent,edge.getDestination());
-		
-		if(x==y)
-			return true;
-		
-		union(x,y);
-		return false;
-	}
-
-	private void union(int x, int y) {
-	parent[x]=y;
-		
-	}
-
-	private int find(int[] parent, int vertex) {
-		
-		if(parent[vertex]== -1){
-			return vertex;
-		}
-		return find(parent,parent[vertex]);
-	}
-
-
 
 }
